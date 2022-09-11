@@ -68,14 +68,50 @@ class snake:
         """
 
         # Check if next move will be food :-)
-
         # Update snake positions
         self.updateSnakePosition(direction, self.isNextMoveFood(direction))
 
         # Check if all positions are valid
+        if(self.isTheSnakeDead(direction)):
+            print('GAME OVER')
+        
+        else:
+            # Update grid
+            self.updateGrid()
 
-        # Update grid
-        self.updateGrid()
+
+    def isTheSnakeDead(self, direction):
+        """
+            Returns True if the snake has died. 
+            This may be because it has gone into a wall (wallphobia) or
+            it has eaten itself (cannabalism). 
+
+            Returns False if the snake is to live another day (or frame).
+        """
+
+        if(direction == 'up'):
+            new_position = (self.snake.getHead().getX(), self.snake.getHead().getY() - 1)
+        elif(direction == 'down'):
+            new_position = (self.snake.getHead().getX(), self.snake.getHead().getY() + 1)
+        elif(direction == 'left'):
+            new_position = (self.snake.getHead().getX() - 1, self.snake.getHead().getY())
+        elif(direction == 'right'):
+            new_position = (self.snake.getHead().getX() + 1, self.snake.getHead().getY())
+
+        # Wall check
+        if(new_position[0] > 9 or new_position[0] < 0 or new_position[1] > 9 or new_position[1] < 0):
+            return True
+
+        # Own-body check
+        current_node = self.snake.getHead()
+
+        while(current_node != None):
+            if(new_position[0] == current_node.getX() and new_position[1] == current_node.getY()):
+                return True
+            
+            current_node = current_node.getNext()
+
+        return False
 
 
     def isNextMoveFood(self, direction):
@@ -102,6 +138,7 @@ class snake:
 
     
     def createNewFoodPosition(self):
+        # destroy old food by making a new food position (that doesnt lie on the snake)
         pass
 
     
@@ -300,3 +337,17 @@ if __name__ == "__main__":
     s.printGrid()
 
     s.move('left')
+
+    s.printGrid()
+
+    s.move('left')
+
+    s.printGrid()
+
+    s.move('left')
+
+    s.printGrid()
+
+    s.move('left')
+
+    s.printGrid()
